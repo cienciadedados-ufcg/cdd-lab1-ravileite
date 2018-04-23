@@ -20,6 +20,9 @@ Analisaremos os episódios da falecida série Sense8.
 
 Houve duas temporadas: quais foram os melhores episódios? A melhor temporada?
 
+## Passo 1
+## Séries escolhidas: Thundercats e Xena a Princesa Guerreira
+
 ```{r}
 episodes = read_csv(here("data/series_from_imdb.csv"), 
                     progress = FALSE,
@@ -28,8 +31,51 @@ episodes = read_csv(here("data/series_from_imdb.csv"),
                                      episode = col_character(), 
                                      url = col_character(),
                                      season = col_character())) %>% 
-    filter(series_name == "Sense8") 
+    filter(series_name %in% c("Thundercats", "Xena a Princesa Guerreira"))
 ```
+
+## Passo 2
+## a. A média geral da avaaliação dos usuários de 'Xena a Princesa Guerreira' é maior que a de 'Thundercats', uma diferença bastantes pequena, porém, ao observarmos mais abaixo o gráfico das médias por temporadas percebemos que 'Thundercats' teve uma evlução continua durante suas temporadas, diferentemente de 'Xena' que teve uma queda da terceira para quarta temporada e logo em seguida voltou a subir na quinta e sexta temporadas.
+
+```{r}
+means = episodes %>% 
+                 group_by(series_name) %>%
+                 summarise(mean(user_rating)) %>%
+                 glimpse
+```
+
+
+```{r}
+season_means = episodes %>% 
+                 group_by(series_name, season) %>%
+                 summarise(mean = mean(user_rating))
+```
+
+```{r}
+season_means %>% 
+    ggplot(aes(x = season, y = mean)) +
+    geom_point() + facet_wrap(~ series_name)
+```
+
+
+```{r}
+episodes %>% 
+    ggplot(aes(x = series_ep, y = user_rating)) +
+    geom_line() + facet_wrap(~ series_name)
+     
+```
+
+
+
+
+
+
+
+
+
+
+
+
 
 ## Quantas avaliações temos por episódio? 
 
