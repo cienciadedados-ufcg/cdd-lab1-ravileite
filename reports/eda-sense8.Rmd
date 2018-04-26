@@ -1,5 +1,5 @@
 ---
-title: "EDA Sense8"
+title: "EDA Thundercats e Xena a Princesa Guerreira"
 output:
   html_notebook:
     toc: yes
@@ -85,160 +85,29 @@ season_means %>%
 
 ##Qual das séries que você escolheu tem episódios de qualidade mais irregular segundo o IMDB? A diferença é grande? Pequena?
 
-O que podemos observar é que, 'Thundercats'apresentou inicialmente uma maior irregularidade nas avaliações das suas primeiras temporadas, podemos observar que o gráfico apresenta vários picos, tanto negativos como positivos com o decorrer dos episódios, chegando a ter uma diferença de mais de 2 pontos de um episódio para outro dentro de uma mesma temporada, porém essas diferenças foram diminuindo mais próximo do fim da série apresentando uma diferença de pouco mais de meio ponto. Ja em 'Xena' ocorre o contrário, nas 3 primeiras temporadas a diferença é menor entre a qualidade dos episódio e quando observamos as avaliações da 4ª temporada em diante os dados começam a apresentar uma variação mais acentuada, chegando a ter mais de 2 pontos de diferença em episódios em uma única temporada.
+O que podemos observar, analisando o gráfico mais abaixo, é que, 'Thundercats'apresentou inicialmente uma maior irregularidade nas avaliações das suas primeiras temporadas, podemos observar que o gráfico apresenta vários picos, tanto negativos como positivos com o decorrer dos episódios, chegando a ter uma diferença de mais de 2 pontos de um episódio para outro dentro de uma mesma temporada, porém essas diferenças foram diminuindo mais próximo do fim da série apresentando uma diferença de pouco mais de meio ponto. Ja em 'Xena' ocorre o contrário, nas 3 primeiras temporadas a diferença é menor entre a qualidade dos episódio e quando observamos as avaliações da 4ª temporada em diante os dados começam a apresentar uma variação mais acentuada, chegando a ter mais de 2 pontos de diferença em episódios em uma única temporada.
+
 
 ```{r}
 episodes %>% 
     ggplot(aes(x = series_ep, y = user_rating, color = season)) +
     labs(x = "Episódios", y = "Avaliações dos usuários") +
-    geom_line() + facet_wrap(~ series_name, ncol = 1)+
+    geom_line() + facet_wrap(~ series_name, ncol = 1) +
+    geom_point() +
     guides(color = guide_legend("Temporada"))
      
 ```
 
-Para termos uma análise mais exata da variação das avaliações para cada série, abaixo calculamos o coeficiente de variância para cada uma. Percebe-se que 'Xena' tem uma variação um pouco maior para cada episódio.
+##Episódios no início/fim da temporada são mais bem avaliados que os no meio? O que tende a ser melhor? Inícios ou finais de séries/temporadas?
+
+Podemos responder essa pergunta também avaliando o mesmo gráfico. Existe sim uma certa tendência quanto a avalição dos episódios nos começos e fins de temporadas, porém, não é um padrão que é sempre seguido. Notamos que geralmente appós o primeiro ou primeiros episódios de uma temporada há uma queda na curva, ou seja, as notas caem, e logo mais próximo do fim da temporada há uma ascenção. Mas isso não quer dizer que os episódios do meio das temporadas não tenham uma nota maior que os do começo ou do fim, muito pelo contrário, há temporadas, das duas séries avaliadas, em que episódios do meio são os mais bem avaliados e também há casos onde essa tendência de uma melhor avaliação no fim e no começo das temporadas não existe, como é o caso da 4ª temporada de 'Xena', onde os primeiros e últimos episódios são os mais mal avalidos da temporada e estão entre os piores da série.
+
+
+Para termos uma análise mais exata da variação das avaliações para cada série, calculamos abaixo o desvio padrão para as avaliações por episódio de cada uma das séries. Percebe-se que 'Xena' tem um desvio maior, isso indica que os valores das avaliações variam mais de episódio para episódio.
 
 ```{r}
 episodes %>% group_by(series_name) %>%
-    summarise(coef_var = (sd(user_rating)/mean(user_rating)) * 100)
+    summarise(sd(user_rating))
 ```
 
-
-
-## Quantas avaliações temos por episódio? 
-
-Cada episódio foi avaliado por um número diferente de usuários do IMDB. Vejamos como é essa distribuição. 
-
-```{r}
-episodes %>% 
-    ggplot(aes(x = season, y = user_votes)) +
-    geom_violin() + 
-    geom_jitter(width = .07) 
-```
-
-
-```{r}
-episodes %>% 
-    ggplot(aes(x = season_ep, y = user_votes))  + 
-    geom_line() + 
-    facet_wrap(~ season)
-               
-```
-
-A quantidade de avaliações varia bastante. Exceto pelo primeiro episódio, os episódios da segunda temporada tem muito menos avaliações. Talvez porque os dados foram coletados logo depois que a segunda temporada foi lançada. 
-
-## Qual a distribuição da avaliação dos episódios?
-
-```{r}
-episodes %>% 
-    ggplot(aes(x = "Sense8", y = user_rating)) + 
-    geom_jitter(width = .05) +
-    ylim(5, 10) + 
-    labs(x = "Episódios", y = "Avaliação no IMDB")
-```
-
-```{r}
-episodes %>% 
-    ggplot(aes(x = user_rating)) + 
-    geom_histogram(binwidth = .5, fill = "pink", color = "black") + 
-    geom_rug(alpha = .5, size = 1.2)
-
-```
-
-```{r}
-sumarios = episodes %>% 
-    summarise(mediana = median(user_rating), 
-              media = mean(user_rating))
-
-episodes %>% 
-    ggplot(aes(x = user_rating)) + 
-    geom_histogram(binwidth = .5, fill = "white", color = "black") + 
-    geom_vline(xintercept = sumarios$media, color = "darkorange") + 
-    geom_vline(xintercept = sumarios$mediana, color = "brown") 
-```
-
-### Qual é esse episódio pior avaliado? 
-
-```{r}
-episodes %>% 
-    filter(user_rating == min(user_rating))
-```
-
-
-## Qual a pior/melhor temporada segundo o IMDB?
-
-```{r}
-episodes %>% 
-    ggplot(aes(x = season, y = user_rating)) + 
-    geom_boxplot(width = .5, outlier.color = NA) +   
-    geom_jitter(width = .1, size = 2, alpha = .5, color = "red")
-```
-
-
-### Há padrões na avaliação ao longo do tempo?
-
-```{r}
-episodes %>% 
-  ggplot(aes(x = season_ep, y = user_rating, color = season)) + 
-  geom_line() + 
-  geom_point() 
-```
-
-Correlações
-
-```{r}
-episodes %>% 
-    group_by(season) %>% 
-    summarise(correlacao_linear = cor(season_ep, user_rating, 
-                                      method = "pearson"), 
-              correlacao_kendall = cor(season_ep, user_rating, 
-                                       method = "kendall"))
-
-```
-
-## Qual o episódio mais detestado? 
-
-```{r}
-episodes %>% 
-    ggplot(aes(x = season_ep, y = r1, color = season)) + 
-    geom_line() + 
-    scale_x_continuous(breaks = 1:12)
-```
-
-### E amado? 
-
-```{r}
-episodes %>%
-    ggplot(aes(x = season_ep, y = r10, color = season)) +
-    geom_line() +
-    scale_x_continuous(breaks = 1:12)
-```
-
-### Amor e ódio andam juntos?
-
-Quais são episódios que estão entre os mais amados e mais odiados? 
-
-```{r}
-episodes =  episodes %>%
-    mutate(
-        rank_odiados = row_number(r1), # maior = mais odiado
-        rank_amados = row_number(r10), # maior = mais amado
-        amado_odiado = rank_amados * rank_odiados) # maior = mais amado E odiado
-    
-episodes %>%
-    ggplot(aes(
-        x = r1,
-        y = r10,
-        color = season,
-        size = amado_odiado,
-        label = season_ep
-    )) +
-    geom_point(alpha = .7) +
-    geom_text(nudge_x = .001, nudge_y = -.01) 
-```
-
-```{r}
-episodes %>% 
-    arrange(-amado_odiado)
-```
 
