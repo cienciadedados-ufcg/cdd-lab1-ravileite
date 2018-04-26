@@ -34,8 +34,33 @@ episodes = read_csv(here("data/series_from_imdb.csv"),
     filter(series_name %in% c("Thundercats", "Xena a Princesa Guerreira"))
 ```
 
+## Observando alguns aspectos das avaliações dos usuários.
+
+## Ao analisarmos o número de avaliações por episódio percebemos que o primeiro episódio é sempre o mais votado, tanto em 'Thundercats' como em 'Xena', percebemos isso por conta do pico que tem a curva logo no início do gráfico. Em alguns momentos podemos perceber também que no início e no fim de algumas temporadas há um pico de votação. A princípio é um pouco arriscado determinar qual a causa desse fenômeno, mas aparentemente é pelo fato dos usários estarem mais empolgados com as séries nesses momentos, sempre no início da série e geralmente no início e no fim de cada temporada, isso pode os levar a querer compartilhar suas opiniões.
+
+```{r}
+episodes %>% filter(series_name == "Thundercats") %>%
+    ggplot(aes(x = series_ep, y = user_votes, color = season)) +
+    geom_line() 
+```
+
+```{r}
+episodes %>% filter(series_name == "Xena a Princesa Guerreira") %>%
+    ggplot(aes(x = series_ep, y = user_votes, color = season)) +
+    geom_line() 
+```
+
+##Outro dado que eu também achei interessante verificar foi a média de votos para cada uma das duas séries. E podemos perceber uma diferença estremamente significativa. Abaixo podemos perceber que a média de votos de 'Thudercatas' ficou em 19.81 votos por episódio. Já 'Xena' tem 232.91 votos, muito acima. Observando isso, podemos concluir que os dados observados em 'Xena' são mais robustos, nos passando mais credibilidade, pois é uma amostra muito maior do que a de 'Thudercats'. 
+
+```{r}
+votes_means = episodes %>% 
+                 group_by(series_name) %>%
+                 summarise(mean = mean(user_votes)) %>%
+                 glimpse
+```
+
 ## Passo 2
-## a. A média geral da avaaliação dos usuários de 'Xena a Princesa Guerreira' é maior que a de 'Thundercats', uma diferença bastantes pequena, porém, ao observarmos mais abaixo o gráfico das médias por temporadas percebemos que 'Thundercats' teve uma evlução continua durante suas temporadas, diferentemente de 'Xena' que teve uma queda da terceira para quarta temporada e logo em seguida voltou a subir na quinta e sexta temporadas.
+## a. A média geral da avaliação dos usuários de 'Xena a Princesa Guerreira' é maior que a de 'Thundercats', uma diferença bastante pequena. Ao observarmos mais abaixo o gráfico das médias de avaliação por temporada percebemos que 'Thundercats' teve uma evolução continua durante suas temporadas, diferente de 'Xena' que teve uma queda da terceira para quarta e logo em seguida voltou a subir na quinta e sexta temporadas. Mesmo assim podemos concluir que, comparando as médias de avaliação de cada uma das duas séries, 'Xena' é uma série melhor avaliada pelos usuários.
 
 ```{r}
 means = episodes %>% 
@@ -57,22 +82,15 @@ season_means %>%
     geom_point() + facet_wrap(~ series_name)
 ```
 
-
+## b. O que podemos observar é que, 'Thundercats'apresentou inicialmente uma maior irregularidade nas avaliações das suas primeiras temporadas, podemos observar que o gráfico apresenta vários picos, tanto negativos como positivos com o decorrer dos episódios, chegando a ter uma diferença de mais de 2 pontos de um episódio para outro dentro de uma mesma temporada, porém essas diferenças foram diminuindo mais próximo do fim da série apresentando uma diferença de pouco mais de meio ponto. Ja em 'Xena' ocorre o contrário, nas 3 primeiras temporadas a diferença é menor entre a qualidade dos episódio e quando observamos as avaliações da 4ª temporada em diante os dados começam a apresentar uma variação mais acentuada, chegando a ter mais de 2 pontos de diferença em episódios em uma única temporada.
 ```{r}
 episodes %>% 
-    ggplot(aes(x = series_ep, y = user_rating)) +
-    geom_line() + facet_wrap(~ series_name)
+    ggplot(aes(x = series_ep, y = user_rating, color = season)) +
+    geom_line() + facet_wrap(~ series_name, ncol = 1)
      
 ```
 
-
-
-
-
-
-
-
-
+##Extra - Pergunta 1
 
 
 
