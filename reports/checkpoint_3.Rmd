@@ -3,11 +3,11 @@ title: "Checkpoint3"
 author: "Ravi Leite"
 date: "5 de maio de 2018"
 output:
-  html_notebook:
-    toc: yes
-    toc_float: yes
   html_document:
     df_print: paged
+    toc: yes
+    toc_float: yes
+  html_notebook:
     toc: yes
     toc_float: yes
 ---
@@ -30,7 +30,7 @@ episodes = read_csv(here("data/series_from_imdb.csv"),
 
 ## A longevidade das séries está associada a sua qualidade (medida pela avaliação) ?
 
-    Para avaliarmos se essa é uma associação válida faremos o seguinte. Separaremos as séries em uma nova tabela pelos nomes, cada uma com a quantidade máxima de episódios e com a média das avaliações feitas pelos usuários para cada série. Assim saberemos se as séries que são mais longas são melhores ou piores avaliadas do que as mais cutas.
+    Para avaliarmos se essa é uma associação válida faremos o seguinte. Separaremos as séries em uma nova tabela pelos nomes, cada uma com a quantidade total de episódios e com a média das avaliações feitas pelos usuários para cada série. Assim, poderemos saber se as séries que são mais longas possuem melhores ou piores avaliações em relação as séries mais curtas.
 
 ```{r}
 eva_df = episodes %>%
@@ -40,7 +40,7 @@ eva_df = episodes %>%
    
 ```
 
-    No gráfico abaixo podemos observar que existe uma região mais povoada, isso quer dizer que existem bem mais séries curtas do que longas. Mas observando o que é de nosso interesse, nota-se que há uma "faixa" onde se concentram a grande maioria dos pontos, que vai mais ou menos de 7 a 9, demarcados pelas linhas verdes. A linha vermelha corta o gráfico verticalmente na média de episódios por série, ela pode servir como um "marcador" para definir se as séries são longas ou não. A partir da linha vermelha percebemos que existem poucas séries mal avalidas, ou seja, com a média das avaliações abaixo da linha inferior onde se encontram a maior quantidade de pontos. 
+    No gráfico abaixo podemos observar que existe uma região mais povoada, isso quer dizer que existem muito mais séries curtas do que longas. Mas observando o que é de nosso interesse, nota-se que há uma "faixa" onde se concentram a grande maioria dos pontos, que vai mais ou menos de 7 a 9, demarcados pelas linhas verdes. A linha vermelha corta o gráfico verticalmente na média de episódios por série, ela pode servir como um "marcador" para definir se as séries são longas ou não. A partir da linha vermelha percebemos que existem poucas séries mal avaliadas, ou seja, com a média das avaliações abaixo da linha inferior onde se encontram a maior quantidade de pontos. 
     Existem mais séries mal avaliadas atrás da linha da média(vermelha), assim, de acordo com o método usado e com os dados disponíveis a conclusão que chegamos é que existem mais séries curtas mal avaliadas do que séries longas mal avaliadas. Por outro lado, percebe-se que no início do gráfico existem séries curtas muito bem avaliadas e que a média das avaliações não são tão altas quando observamos séries mais longas. Porém, não existem muitas séries longas e tão mal avalidas, assim conclui-se que no geral uma série longa tende a ser bem avaliada.   
 
 ```{r}
@@ -56,7 +56,7 @@ eva_df %>%
 ##A longevidade das séries está associada a sua popularidade (número de votos) ?
 
 
-    Inicialmente pensei em utilizar o total de votos para cada série, porém percebi que uma série é popular se ela se manter por um tempo razoável (no decorrer de suas temporadas) sendo avaliada por um dado número de pessoas, aqui no nosso contexto, pois "popular" de acordo com o nosso banco de dados refere-se as séries que recebem mais votos. Para isso usamos então a média de votos para cada série, com isso capturamos melhor sua popularidade com o decorrer do tempo, pois pode acontecer de uma série ter milhares de votos na primeira temporada e cair logo em seguida, assim vemos o quanto ela é popular em toda sua extensão. Outro motivo é que o gráfico fica praticamente impossível de ser interpretado pois existe uma discrepância absurda entre algumas séries em relação ao número total de votos.
+    Inicialmente pensei em utilizar o total de votos para cada série para explicar a popularidade, porém percebi que uma série é popular se ela se manter por um tempo razoável (no decorrer de suas temporadas) sendo avaliada por um dado número de pessoas, aqui no nosso contexto, pois "popular" de acordo com o nosso banco de dados refere-se as séries que recebem mais votos. Para isso usamos então a média de votos para cada série, com isso capturamos melhor sua popularidade com o decorrer do tempo, pois pode acontecer de uma série ter milhares de votos na primeira temporada e cair logo em seguida, assim vemos o quanto ela é popular em toda sua extensão. Outro motivo é que o gráfico fica praticamente impossível de ser interpretado pois existe uma discrepância absurda entre algumas séries em relação ao número total de votos.
  
 ```{r}
 eva_df = episodes %>%
@@ -116,3 +116,7 @@ eva_df %>%
 ```
 
     As séries mais votadas e mais longas estão em menor número do que as menos votadas e mais longas, conclui-se que quanto mais longa uma série existe uma chance maior dela ser impopular do que popular. Agora o dado mais interessante é em relação as mais curtas, pois existe uma diferença muito grande entre elas o número de séries impopulares e curtas supera e muito o número de séries populares e curtas. Assim percebe-se que uma série muito curta tem muito mais chances de ser impopular do que uma série mais longa. Lembrando que chegamos a essa conclusão usando os dados disponíveis e os métodos acima.
+    
+#Comentários
+
+  Boa análise, a abordagem para responder e interpretar as os gráficos foi bem executada, facilitando o entendimento do raciocínio utilizado para chegar à resposta. Como sugestão, acho que algumas partes podem ser escritas de forma mais clara e mais objetia, mas a ideia principal é fácil para entender. Outra sugestão é com relação a fonte do texto gerada no relatório, pois é igual a fonte utilizada nos trechos de código e podem dificultar um pouco a leitura. Senti falta da visão geral das variáveis utilizadas para responder as perguntas do relatório e também a identificação das outras perguntas a partir dos resultados encontrados.
